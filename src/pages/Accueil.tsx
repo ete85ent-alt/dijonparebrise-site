@@ -15,6 +15,7 @@ function DonneesGoogle() {
       "Remplacement et réparation de pare-brise, vitres latérales et lunette arrière, à domicile ou au travail.",
     url: `${site.siteUrl}/`,
     ...(aCompleter(site.telephone) ? {} : { telephone: site.telephone }),
+    address: { "@type": "PostalAddress", streetAddress: site.adresse.rue, postalCode: site.adresse.codePostal, addressLocality: site.adresse.ville, addressCountry: "FR" },
     areaServed: COMMUNES.map((c) => ({ "@type": "City", name: c.nom })),
   };
   return (
@@ -38,7 +39,7 @@ export default function Accueil() {
               remplacé là où vous êtes.
             </>
           }
-          texte="À domicile ou sur le parking de votre travail. Un artisan dijonnais se déplace avec tout le matériel et s’occupe de votre assurance."
+          texte="À domicile ou sur le parking de votre travail. DIJON PARE-BRISE se déplace avec tout le matériel et s’occupe de votre assurance."
         />
         <SuiteDePage />
       </main>

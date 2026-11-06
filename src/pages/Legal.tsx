@@ -47,9 +47,8 @@ export function MentionsLegales() {
       </p>
       <p>Responsable de la publication : {m.responsable}.</p>
       <p>
-        Dijon Pare-Brise est un artisan mobile : les interventions ont lieu chez
-        le client ou sur son lieu de travail. Le siège social ne reçoit pas de
-        clientèle.
+        DIJON PARE-BRISE se déplace : les interventions ont lieu chez le client
+        ou sur son lieu de travail.
       </p>
       <h2>Hébergement</h2>
       <p>{m.hebergeur}</p>

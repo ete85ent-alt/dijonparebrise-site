@@ -3,7 +3,7 @@ import { vers } from "../vers";
 import { Logo } from "./Logo";
 import StatutOuverture from "./Statut";
 import { Container, Etiquette, Ico } from "./ui";
-import { lienAppel, site } from "../config";
+import { adresseComplete, lienAppel, site } from "../config";
 import { COMMUNES, cheminCommune } from "../contenu";
 import { montrer } from "../aCompleter";
 import { useAncre } from "../ancre";
@@ -146,6 +146,7 @@ export default function Header({ surPhoto = true }: { surPhoto?: boolean }) {
                     {site.telephone}
                   </a>
                 )}
+                <span className="text-[15px] text-doux">{adresseComplete}</span>
                 <StatutOuverture />
               </div>
             </div>

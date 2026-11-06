@@ -12,7 +12,7 @@ import {
   type NomPhoto,
 } from "./ui";
 import { Devis, Rappel } from "./Formulaires";
-import { lienAppel, site } from "../config";
+import { adresseComplete, lienAppel, site } from "../config";
 import { COMMUNES, FAQ, PRESTATIONS, cheminCommune } from "../contenu";
 import { Texte, montrer } from "../aCompleter";
 
@@ -337,7 +337,7 @@ export function Deroulement() {
             ))}
           </ul>
           <p className="mt-6 font-light text-doux">
-            Votre commune n’est pas dans la liste ? Demandez-nous.
+            Basés au {adresseComplete}, nous nous déplaçons chez vous ou au travail. Votre commune n’est pas dans la liste ? Demandez-nous.
           </p>
         </div>
       </Container>

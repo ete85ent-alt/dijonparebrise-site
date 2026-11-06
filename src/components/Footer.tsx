@@ -62,6 +62,7 @@ export default function Footer() {
         </div>
         <div className="flex flex-col">
           <p className={titre}>Contact</p>
+          <span className="py-2 text-[15px] leading-relaxed text-white/60">{site.adresse.rue}<br />{site.adresse.codePostal} {site.adresse.ville}</span>
           {montrer(site.telephone) && (
             <a
               href={site.telephoneLien ? lienAppel() : vers("/#rappel")}

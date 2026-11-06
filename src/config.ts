@@ -40,18 +40,23 @@ export const site = {
     ["[X] ans", "d’expérience"],
     ["[12] mois", "de garantie sur la pose"],
   ] as [string, string][],
+  // Adresse affichée sur le site (décision du 06/11/2026) ; l'artisan se déplace toujours chez le client ou au travail
+  adresse: { rue: "6-8 rue de Bastogne", codePostal: "21850", ville: "Saint-Apollinaire" },
   mentions: {
     raisonSociale: "DIJON PARE-BRISE, SASU",
     capital: "1 000 €",
     siren: "109 984 252",
     rcs: "RCS Dijon [à confirmer]",
-    // Siège social : n'apparaît que dans les mentions légales (obligatoire). Pas d'atelier : l'artisan se déplace.
+    // Siège social (même adresse que site.adresse)
     siege: "6-8 rue de Bastogne, 21850 Saint-Apollinaire",
     responsable: "Mohamed EL QAMAR, président",
     hebergeur:
       "[Hébergeur du site, ex. OVH SAS, 2 rue Kellermann, 59100 Roubaix]",
   },
 };
+
+/** Adresse sur une ligne. */
+export const adresseComplete = `${site.adresse.rue}, ${site.adresse.codePostal} ${site.adresse.ville}`
 
 /** Lien d'appel : le numéro s'il est connu, sinon le formulaire « Être rappelé ». */
 export const lienAppel = () =>

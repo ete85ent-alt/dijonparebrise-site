@@ -58,15 +58,28 @@ test("aucun texte « [à compléter] » montré aux visiteurs du vrai site", asy
   }
 });
 
-test("aucune adresse affichée hors des mentions légales (artisan mobile)", async ({
+test("adresse affichée, et le déplacement chez le client toujours mis en avant", async ({
   page,
 }) => {
-  for (const chemin of ["/", "/pare-brise-saint-apollinaire"]) {
-    await page.goto(chemin);
-    expect(await page.locator("body").innerText()).not.toMatch(/Bastogne/);
-  }
+  await page.goto("/");
+  await expect(
+    page.locator("footer").getByText(/6-8 rue de Bastogne/),
+  ).toBeVisible();
+  await expect(
+    page.getByText(
+      /Basés au 6-8 rue de Bastogne, 21850 Saint-Apollinaire, nous nous déplaçons chez vous ou au travail/,
+    ),
+  ).toBeVisible();
+  await expect(
+    page.getByText(/DIJON PARE-BRISE se déplace avec tout le matériel/),
+  ).toBeVisible();
+  expect(await page.locator("body").innerText()).not.toMatch(
+    /artisan dijonnais/,
+  );
   await page.goto("/mentions-legales");
-  await expect(page.getByText(/6-8 rue de Bastogne/)).toBeVisible();
+  await expect(
+    page.getByText(/Siège social : 6-8 rue de Bastogne/),
+  ).toBeVisible();
 });
 
 test("photos : la plus petite taille suffisante est chargée sur téléphone", async ({
@@ -104,16 +117,14 @@ test("devis express en 3 étapes : dégât, véhicule et photo, coordonnées", a
   await expect(
     devis.getByText("Nous nous déplaçons dans votre commune"),
   ).toBeVisible();
-  await devis
-    .locator("input[type=file]")
-    .setInputFiles({
-      name: "pare-brise.png",
-      mimeType: "image/png",
-      buffer: Buffer.from(
-        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
-        "base64",
-      ),
-    });
+  await devis.locator("input[type=file]").setInputFiles({
+    name: "pare-brise.png",
+    mimeType: "image/png",
+    buffer: Buffer.from(
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+      "base64",
+    ),
+  });
   await expect(devis.getByText("1 photo ajoutée")).toBeVisible();
   await devis.getByRole("button", { name: "Continuer" }).click();
 
