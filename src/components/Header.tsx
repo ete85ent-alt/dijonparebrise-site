@@ -1,106 +1,157 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { vers } from "../vers";
 import { Logo } from "./Logo";
 import StatutOuverture from "./Statut";
-import { Container, Ico, btnAmbre } from "./ui";
+import { Container, Etiquette, Ico } from "./ui";
 import { lienAppel, site } from "../config";
+import { COMMUNES, cheminCommune } from "../contenu";
 import { montrer } from "../aCompleter";
 import { useAncre } from "../ancre";
 
-export default function Header() {
+/**
+ * En-tête : « Menu » à gauche, logo au centre, téléphone et devis à droite.
+ * surPhoto : posé en transparence sur la grande photo d'ouverture (texte blanc) ; sinon fond blanc.
+ */
+export default function Header({ surPhoto = true }: { surPhoto?: boolean }) {
   const ancre = useAncre();
   const [menu, setMenu] = useState(false);
+  useEffect(() => {
+    if (!menu) return;
+    const echap = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenu(false);
+    };
+    document.addEventListener("keydown", echap);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", echap);
+      document.body.style.overflow = "";
+    };
+  }, [menu]);
+
   const liens: [string, string][] = [
-    ["Remplacement", ancre("services")],
-    ["Réparation d’impact", ancre("services")],
-    ["À domicile", ancre("domicile")],
-    ["Assurances", ancre("assurance")],
-    ["Communes", ancre("communes")],
+    ["Prestations", ancre("services")],
+    ["À domicile ou au travail", ancre("domicile")],
+    ["Assurance bris de glace", ancre("assurance")],
+    ["Devis gratuit", ancre("devis")],
+    ["Questions fréquentes", ancre("questions")],
+    ["Être rappelé", ancre("rappel")],
   ];
+  const couleur = surPhoto ? "text-white" : "text-noir";
   return (
     <>
-      <div className="bg-nuit text-white">
-        <Container className="flex min-h-10 flex-wrap items-center justify-between gap-x-4 gap-y-1 py-1.5 text-[13px] md:text-[14px]">
-          <span className="text-white/85">
-            On se déplace <strong className="text-white">chez vous</strong> ou{" "}
-            <strong className="text-white">au travail</strong> ·{" "}
-            {site.zone.texte}
-          </span>
-          <StatutOuverture />
-        </Container>
-      </div>
-      <header className="sticky top-0 z-50 border-b border-ligne bg-white/95 backdrop-blur">
-        <Container className="flex h-16 items-center gap-4 md:h-[76px]">
-          <a
-            href={vers("/")}
-            className="shrink-0 no-underline"
-            aria-label="Dijon Pare-Brise, accueil"
+      <header
+        className={`${surPhoto ? "absolute inset-x-0 top-0 z-40" : "border-b border-trait bg-white"} ${couleur}`}
+      >
+        <Container className="grid h-[84px] grid-cols-[1fr_auto_1fr] items-center md:h-[96px]">
+          <button
+            type="button"
+            onClick={() => setMenu(true)}
+            aria-expanded={menu}
+            aria-controls="menu"
+            aria-label="Ouvrir le menu"
+            className="flex h-11 items-center gap-3 justify-self-start text-[15px]"
           >
-            <Logo />
+            <span
+              aria-hidden="true"
+              className="block h-[9px] w-[22px] border-y-[1.5px] border-current"
+            />
+            <span className="hidden md:inline">Menu</span>
+          </button>
+          <a href={vers("/")} aria-label="Dijon Pare-Brise, accueil">
+            <Logo clair={surPhoto} />
           </a>
-          <nav
-            aria-label="Menu principal"
-            className="ml-6 hidden items-center gap-1 lg:flex"
-          >
-            {liens.map(([nom, href]) => (
-              <a
-                key={nom}
-                href={href}
-                className="rounded-lg px-3 py-2 text-[15px] font-semibold text-nuit no-underline hover:bg-fond"
-              >
-                {nom}
-              </a>
-            ))}
-          </nav>
-          <div className="ml-auto flex items-center gap-2">
+          <div className="flex items-center gap-7 justify-self-end text-[15px]">
             {montrer(site.telephone) && (
               <a
                 href={site.telephoneLien ? lienAppel() : ancre("rappel")}
-                className="hidden items-center gap-2 whitespace-nowrap rounded-lg px-3 py-2 text-[15px] font-bold text-nuit no-underline hover:bg-fond md:flex"
+                className="hidden lg:inline"
               >
-                <Ico nom="telephone" taille={20} className="text-bleu" />
                 {site.telephone}
               </a>
             )}
             <a
               href={ancre("devis")}
-              className={`${btnAmbre} !min-h-11 !px-4 !py-2 max-sm:!hidden`}
+              className="hidden border-b border-current/60 pb-1 sm:inline"
             >
               Devis gratuit
             </a>
-            <button
-              type="button"
-              onClick={() => setMenu((m) => !m)}
-              aria-expanded={menu}
-              aria-controls="menu-mobile"
-              aria-label={menu ? "Fermer le menu" : "Ouvrir le menu"}
-              className="flex h-11 w-11 items-center justify-center rounded-lg text-nuit hover:bg-fond lg:hidden"
-            >
-              <Ico nom={menu ? "fermer" : "menu"} />
-            </button>
           </div>
         </Container>
-        {menu && (
-          <nav
-            id="menu-mobile"
-            aria-label="Menu"
-            className="border-t border-ligne bg-white lg:hidden"
-          >
-            <Container className="flex flex-col py-2">
-              {liens.map(([nom, href]) => (
-                <a
-                  key={nom}
-                  href={href}
-                  onClick={() => setMenu(false)}
-                  className="border-b border-ligne py-3.5 text-[17px] font-semibold text-nuit no-underline last:border-0"
-                >
-                  {nom}
-                </a>
-              ))}
-            </Container>
-          </nav>
-        )}
       </header>
+
+      {menu && (
+        <div
+          id="menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu"
+          className="fixed inset-0 z-[60] overflow-y-auto bg-white text-noir"
+        >
+          <Container className="flex h-[84px] items-center justify-between md:h-[96px]">
+            <Logo />
+            <button
+              type="button"
+              onClick={() => setMenu(false)}
+              aria-label="Fermer le menu"
+              className="flex h-11 items-center gap-2 text-[15px]"
+            >
+              <span className="hidden md:inline">Fermer</span>
+              <Ico nom="fermer" />
+            </button>
+          </Container>
+          <Container className="grid gap-12 pb-16 pt-6 md:grid-cols-[3fr_2fr] md:pt-12">
+            <nav aria-label="Menu">
+              <ul className="border-t border-trait">
+                {liens.map(([nom, href]) => (
+                  <li key={nom} className="border-b border-trait">
+                    <a
+                      href={href}
+                      onClick={() => setMenu(false)}
+                      className="flex items-center justify-between py-5 text-[26px] font-light md:text-[34px]"
+                    >
+                      {nom}
+                      <span aria-hidden="true" className="text-doux">
+                        →
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            <div className="flex flex-col gap-8">
+              <div className="flex flex-col gap-3">
+                <Etiquette>Zone d’intervention</Etiquette>
+                <ul className="flex flex-col">
+                  {COMMUNES.map((c) => (
+                    <li key={c.slug}>
+                      <a
+                        href={vers(cheminCommune(c))}
+                        onClick={() => setMenu(false)}
+                        className="inline-flex min-h-10 items-center text-[17px] text-doux hover:text-noir"
+                      >
+                        Pare-brise {c.nom}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="flex flex-col gap-3">
+                <Etiquette>Contact</Etiquette>
+                {montrer(site.telephone) && (
+                  <a
+                    href={site.telephoneLien ? lienAppel() : ancre("rappel")}
+                    onClick={() => setMenu(false)}
+                    className="text-[20px]"
+                  >
+                    {site.telephone}
+                  </a>
+                )}
+                <StatutOuverture />
+              </div>
+            </div>
+          </Container>
+        </div>
+      )}
     </>
   );
 }

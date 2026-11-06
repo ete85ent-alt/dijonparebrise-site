@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import { Container } from "../components/ui";
 import { site } from "../config";
 import { Texte } from "../aCompleter";
+import photos from "../photos.json";
 
 function PageTexte({
   titre,
@@ -15,10 +16,10 @@ function PageTexte({
 }) {
   return (
     <>
-      <Header />
+      <Header surPhoto={false} />
       <main>
-        <Container className="flex max-w-[820px] flex-col gap-5 py-14 text-[16px] leading-relaxed md:py-20 [&_h2]:mt-4 [&_h2]:text-[24px] [&_h2]:font-extrabold">
-          <h1 className="text-[38px] font-extrabold leading-tight md:text-[52px]">
+        <Container className="flex max-w-[860px] flex-col gap-5 py-16 text-[16px] font-light leading-relaxed md:py-24 [&_h2]:mt-6 [&_h2]:text-[24px] [&_h2]:font-normal [&_strong]:font-medium">
+          <h1 className="text-[40px] font-light leading-tight md:text-[60px]">
             {titre}
           </h1>
           {children}
@@ -52,15 +53,37 @@ export function MentionsLegales() {
       </p>
       <h2>Hébergement</h2>
       <p>{m.hebergeur}</p>
+      <h2>Photos</h2>
+      <p>
+        Les photos du site sont des <strong>photos d’illustration</strong> :
+        elles ne représentent pas des interventions de Dijon Pare-Brise ni les
+        véhicules de ses clients. Elles proviennent d’Unsplash (licence
+        Unsplash, usage commercial autorisé).
+      </p>
+      <ul className="list-disc pl-5 text-[15px] text-doux">
+        {Object.entries(photos).map(([nom, c]) => (
+          <li key={nom}>
+            <a
+              href={c.lien}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2"
+            >
+              Photo de {c.auteur}
+            </a>{" "}
+            sur Unsplash
+          </li>
+        ))}
+      </ul>
       <h2>Propriété intellectuelle</h2>
       <p>
-        Les textes, illustrations et le logo de ce site appartiennent à{" "}
-        {m.raisonSociale}. Toute reproduction sans autorisation est interdite.
+        Les textes et le logo de ce site appartiennent à {m.raisonSociale}.
+        Toute reproduction sans autorisation est interdite.
       </p>
       <h2>Crédits</h2>
       <p>
         Conception, design et réalisation : ÉTÉ 85 – Digital, Data &amp; IA
-        (ete-85.fr). Polices Geist et Archivo (licence SIL Open Font License).
+        (ete-85.fr). Police Hanken Grotesk (licence SIL Open Font License).
       </p>
     </PageTexte>
   );
@@ -111,11 +134,11 @@ export function Introuvable() {
     <PageTexte titre="Page introuvable">
       <p>Cette page n’existe pas ou a changé d’adresse.</p>
       <p>
-        <a href={vers("/")} className="font-semibold">
-          ← Retour à l’accueil
+        <a href={vers("/")} className="underline underline-offset-2">
+          Retour à l’accueil
         </a>{" "}
         · ou{" "}
-        <a href={vers("/#devis")} className="font-semibold">
+        <a href={vers("/#devis")} className="underline underline-offset-2">
           demandez votre devis gratuit
         </a>
         .

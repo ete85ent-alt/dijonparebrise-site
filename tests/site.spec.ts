@@ -69,7 +69,20 @@ test("aucune adresse affichée hors des mentions légales (artisan mobile)", asy
   await expect(page.getByText(/6-8 rue de Bastogne/)).toBeVisible();
 });
 
-test("devis express : code postal desservi, envoi avec photo", async ({
+test("photos : la plus petite taille suffisante est chargée sur téléphone", async ({
+  page,
+  isMobile,
+}) => {
+  await page.goto("/");
+  const photo = page.locator("section").first().locator("img");
+  await expect(photo).toHaveAttribute("fetchpriority", "high");
+  const src = await photo.evaluate((i: HTMLImageElement) => i.currentSrc);
+  expect(src).toMatch(
+    isMobile ? /ouverture-(640|1280)\.webp/ : /ouverture-(1280|1920)\.webp/,
+  );
+});
+
+test("devis express en 3 étapes : dégât, véhicule et photo, coordonnées", async ({
   page,
 }) => {
   let corps = "";
@@ -81,6 +94,11 @@ test("devis express : code postal desservi, envoi avec photo", async ({
   const devis = page.locator("#devis");
   await devis.getByText("Fissure", { exact: true }).click();
   await devis.getByText("Au travail", { exact: true }).click();
+  await devis.getByRole("button", { name: "Continuer" }).click();
+
+  // étape 2 : le code postal est obligatoire
+  await devis.getByRole("button", { name: "Continuer" }).click();
+  await expect(devis.getByLabel("Code postal")).toBeVisible();
   await devis.getByLabel("Immatriculation").fill("ab-123-cd");
   await devis.getByLabel("Code postal").fill("21300");
   await expect(
@@ -97,6 +115,12 @@ test("devis express : code postal desservi, envoi avec photo", async ({
       ),
     });
   await expect(devis.getByText("1 photo ajoutée")).toBeVisible();
+  await devis.getByRole("button", { name: "Continuer" }).click();
+
+  // étape 3 : les champs déjà remplis sont gardés si l'on revient en arrière
+  await devis.getByRole("button", { name: "Retour" }).click();
+  await expect(devis.getByLabel("Code postal")).toHaveValue("21300");
+  await devis.getByRole("button", { name: "Continuer" }).click();
   await devis.getByLabel("Nom").fill("Client Essai");
   await devis.getByLabel("Téléphone").fill("0600000000");
   await devis.getByRole("checkbox").check();
@@ -104,11 +128,14 @@ test("devis express : code postal desservi, envoi avec photo", async ({
     .getByRole("button", { name: "Recevoir mon devis gratuit" })
     .click();
   await expect(page.getByText("Demande envoyée")).toBeVisible();
-  expect(corps).toContain("Fissure");
-  expect(corps).toContain("Au travail");
-  expect(corps).toContain("21300");
-  expect(corps).toContain('name="type"');
-  expect(corps).toContain("photo-1.jpg");
+  for (const attendu of [
+    "Fissure",
+    "Au travail",
+    "21300",
+    'name="type"',
+    "photo-1.jpg",
+  ])
+    expect(corps).toContain(attendu);
 });
 
 test("être rappelé : formulaire envoyé", async ({ page }) => {
@@ -125,23 +152,26 @@ test("être rappelé : formulaire envoyé", async ({ page }) => {
   await expect(rappel.getByText("Demande envoyée")).toBeVisible();
 });
 
-test("téléphone : barre d’actions en bas et menu", async ({
-  page,
-  isMobile,
-}) => {
+test("menu plein écran : s’ouvre, se ferme avec Échap", async ({ page }) => {
+  await page.goto("/pare-brise-chenove");
+  await page.getByRole("button", { name: "Ouvrir le menu" }).click();
+  const menu = page.getByRole("dialog", { name: "Menu" });
+  await expect(
+    menu.getByRole("link", { name: /Assurance bris de glace/ }),
+  ).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(menu).toBeHidden();
+});
+
+test("téléphone : barre d’actions en bas", async ({ page, isMobile }) => {
   test.skip(!isMobile, "téléphone seulement");
   await page.goto("/pare-brise-chenove");
   const barre = page.getByRole("navigation", { name: "Actions rapides" });
   await expect(barre).toBeVisible();
-  await expect(
-    barre.getByRole("link", { name: "Devis photo" }),
-  ).toHaveAttribute("href", "#devis");
-  await page.getByRole("button", { name: "Ouvrir le menu" }).click();
-  await expect(
-    page
-      .getByRole("navigation", { name: "Menu", exact: true })
-      .getByRole("link", { name: "Assurances" }),
-  ).toBeVisible();
+  await expect(barre.getByRole("link", { name: "Devis" })).toHaveAttribute(
+    "href",
+    "#devis",
+  );
 });
 
 test("adresse inconnue : vraie page 404", async ({ page }) => {

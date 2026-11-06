@@ -14,7 +14,8 @@ Base technique reprise du site Cars Factory 21 : React 18, Vite 6, Tailwind 4, r
 
 - Toutes les informations de l'entreprise sont dans `src/config.ts` ; les textes dans `src/contenu.ts`.
 - Un texte entre crochets `[…]` est à fournir par l'artisan : jamais montré sur le vrai site, surligné sur la démonstration.
-- Logo provisoire : `src/components/Logo.tsx` (mode d'emploi pour le remplacer en tête du fichier) et `public/favicon.svg`.
+- Style « chic » validé par le client (proposition A, `propositions/`) ; logo monogramme DP : `src/components/Logo.tsx` et `public/favicon.svg`.
+- Photos d’illustration Unsplash (crédits dans les mentions légales) : `node scripts/telecharger-photos.mjs`, à remplacer par les vraies photos d’intervention.
 - Aucune adresse affichée : le siège n'apparaît que dans les mentions légales.
 - Formulaires de devis et de rappel : `public/api/devis.php` (renseigner `DESTINATAIRE` et `EXPEDITEUR` avant la mise en ligne).
 - Nom de domaine provisoire `dijon-pare-brise.fr` : à changer dans `src/config.ts`, `scripts/prerendu.mjs`, `index.html`, `public/.htaccess`, `public/robots.txt` et `public/api/devis.php`.

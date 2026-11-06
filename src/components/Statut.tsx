@@ -23,14 +23,10 @@ export function useStatutOuverture() {
 export default function StatutOuverture() {
   const s = useStatutOuverture();
   if (!site.horaires.confirmes && !DEMO) return null;
-  const couleur = !s ? "bg-white/40" : s.ouvert ? "bg-[#34D399]" : "bg-ambre";
   return (
-    <span
-      className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[13px] font-semibold text-white"
-      role="status"
-    >
+    <span className="inline-flex items-center gap-2 text-[14px]" role="status">
       <span
-        className={`h-2.5 w-2.5 shrink-0 rounded-full ${couleur}`}
+        className={`h-2 w-2 shrink-0 rounded-full ${!s ? "bg-trait" : s.ouvert ? "bg-[#2E9E5B]" : "bg-cassis-clair"}`}
         aria-hidden="true"
       />
       {s?.texte ?? "Horaires"}

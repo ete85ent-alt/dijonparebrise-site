@@ -2,145 +2,96 @@ import type { ReactNode } from "react";
 import { vers, DEMO } from "../vers";
 import {
   Container,
-  Ico,
-  PhotoAVenir,
+  Etiquette,
+  Fleche,
+  Photo,
   TitreSection,
-  btnAmbre,
-  btnClair,
-  btnNuit,
-  type NomIco,
+  btnBlanc,
+  btnContour,
+  btnLigne,
+  type NomPhoto,
 } from "./ui";
 import { Devis, Rappel } from "./Formulaires";
 import { lienAppel, site } from "../config";
-import {
-  COMMUNES,
-  ENGAGEMENTS,
-  FAQ,
-  PRESTATIONS,
-  cheminCommune,
-} from "../contenu";
+import { COMMUNES, FAQ, PRESTATIONS, cheminCommune } from "../contenu";
 import { Texte, montrer } from "../aCompleter";
 
-const Etoile = () => <sup className="text-ambre">*</sup>;
-
-/** Accroche + devis express (accueil et pages par commune). */
-export function Accroche({
+/** Grande photo d'ouverture plein écran, titre en bas à gauche, offre « 200 € offerts » à droite. */
+export function Ouverture({
+  etiquette,
   titre,
-  sousTitre,
+  texte,
 }: {
+  etiquette: string;
   titre: ReactNode;
-  sousTitre?: ReactNode;
+  texte: string;
 }) {
-  const badges = [
-    "0 € d’avance avec la garantie bris de glace",
-    "Démarches assurance gérées",
-    ...(montrer(site.delaiRendezVous)
-      ? [`Rendez-vous sous ${site.delaiRendezVous}`]
-      : []),
-  ];
   return (
-    <section className="relative overflow-hidden bg-nuit text-white">
+    <section className="relative flex min-h-[calc(100svh-60px)] lg:min-h-[100svh] flex-col justify-end overflow-hidden bg-noir text-white lg:max-h-[1000px]">
+      <Photo
+        nom="ouverture"
+        prioritaire
+        assombrir
+        className="absolute inset-0"
+      />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full bg-bleu/30 blur-3xl"
+        className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.6)_0%,rgba(0,0,0,0)_28%,rgba(0,0,0,0.25)_55%,rgba(0,0,0,0.85)_100%)]"
       />
-      <Container className="relative grid gap-10 py-10 md:py-16 lg:grid-cols-12 lg:items-start lg:gap-12">
-        <div className="flex flex-col gap-5 lg:col-span-6 lg:pt-6">
-          <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-ciel">
-            Pare-brise · vitres · lunette arrière
-          </p>
-          <h1 className="text-[36px] font-extrabold leading-[1.04] md:text-[56px]">
+      <Container className="relative z-10 grid gap-10 pb-12 pt-[120px] md:pb-20 lg:grid-cols-[1fr_auto] lg:items-end">
+        <div className="apparition flex flex-col">
+          <Etiquette clair className="mb-5">
+            {etiquette}
+          </Etiquette>
+          <h1 className="max-w-[13ch] text-[42px] font-light leading-[1.02] md:text-[72px] xl:text-[92px]">
             {titre}
           </h1>
-          <p className="text-[17px] leading-relaxed text-[#C9D6E2] md:text-[19px]">
-            {sousTitre ??
-              "Un artisan qui se déplace, s’occupe des démarches avec votre assurance et vous rend un véhicule prêt à rouler."}
-          </p>
-          <ul className="flex flex-wrap gap-2">
-            {badges.map((b) => (
-              <li
-                key={b}
-                className="flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[14px] font-semibold"
-              >
-                <Ico nom="coche" taille={16} className="text-[#34D399]" />
-                <Texte t={b} />
-              </li>
-            ))}
-          </ul>
-          <p className="flex items-center gap-3 rounded-2xl border border-ambre/40 bg-ambre/10 px-4 py-3 text-[17px]">
-            <Ico nom="cadeau" taille={28} className="shrink-0 text-ambre" />
-            <span>
-              <strong className="font-titre text-[22px] font-extrabold text-ambre">
-                {site.offre.titre}
-              </strong>
-              <Etoile /> {site.offre.texte}
-            </span>
+          <p className="mb-9 mt-6 max-w-[46ch] text-[17px] font-light leading-relaxed text-white/80 md:text-[19px]">
+            {texte}
           </p>
           <div className="flex flex-col gap-3 sm:flex-row">
-            {montrer(site.telephone) && (
-              <a
-                href={site.telephoneLien ? lienAppel() : "#rappel"}
-                className={btnAmbre}
-              >
-                <Ico nom="telephone" taille={20} />
-                Appeler <Texte t={site.telephone} />
-              </a>
-            )}
-            <a href="#rappel" className={btnClair}>
-              <Ico nom="rappel" taille={20} />
+            <a href="#devis" className={btnBlanc}>
+              Demander un devis <Fleche />
+            </a>
+            <a href="#rappel" className={btnContour}>
               Être rappelé
             </a>
           </div>
         </div>
-        <div className="lg:col-span-6">
-          <Devis />
-        </div>
+        <p className="flex items-baseline gap-3 border-t border-white/20 pt-5 lg:flex-col lg:items-end lg:gap-1 lg:border-0 lg:pt-0 lg:text-right">
+          <span className="whitespace-nowrap text-[28px] font-light md:text-[46px]">
+            {site.offre.titre}
+          </span>
+          <span className="text-[12px] uppercase tracking-[0.18em] text-cassis-clair">
+            sur tout remplacement*
+          </span>
+        </p>
       </Container>
     </section>
   );
 }
 
-export function Engagements() {
-  const icones: NomIco[] = ["maison", "bouclier", "cadeau", "coche"];
-  return (
-    <section
-      aria-label="Nos engagements"
-      className="border-b border-ligne bg-white"
-    >
-      <Container className="grid gap-6 py-10 sm:grid-cols-2 lg:grid-cols-4">
-        {ENGAGEMENTS.map(([t, d], i) => (
-          <div key={t} className="flex items-start gap-3">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-glace text-bleu">
-              <Ico nom={icones[i]} />
-            </span>
-            <div>
-              <strong className="block text-[17px]">
-                <Texte t={t} />
-              </strong>
-              <span className="text-[15px] text-gris">
-                <Texte t={d} />
-              </span>
-            </div>
-          </div>
-        ))}
-      </Container>
-    </section>
-  );
-}
-
-/** Chiffres et avis Google : n'apparaissent sur le vrai site qu'une fois remplis. */
+/** Bande de chiffres sous l'ouverture (les chiffres à compléter n'apparaissent pas sur le vrai site). */
 export function Chiffres() {
-  const chiffres = site.chiffres.filter(([v]) => montrer(v));
-  if (!chiffres.length) return null;
+  const items: [string, string][] = [
+    ["0 €", "d’avance si vous êtes assuré"],
+    ["100 % mobile", "chez vous ou au travail"],
+    ["Devis gratuit", "sans engagement, sur photo"],
+    ["Assurance", "démarches gérées pour vous"],
+    ...site.chiffres.filter(([v]) => montrer(v)),
+  ];
   return (
-    <section aria-label="Chiffres et avis" className="bg-fond">
-      <Container className="grid grid-cols-2 gap-6 py-10 text-center lg:grid-cols-4">
-        {chiffres.map(([v, l]) => (
-          <div key={l}>
-            <strong className="block font-titre text-[34px] font-extrabold text-nuit">
+    <section aria-label="En bref" className="border-b border-trait">
+      <Container className={`grid grid-cols-2 lg:grid-cols-4`}>
+        {items.map(([v, l]) => (
+          <div
+            key={l}
+            className="border-b border-trait py-6 pr-4 odd:border-r odd:pr-4 even:pl-5 md:py-8 lg:border-b-0 lg:border-r lg:pl-7 lg:first:pl-0 lg:last:border-r-0 lg:even:pl-7"
+          >
+            <strong className="block text-[22px] font-light md:text-[30px]">
               <Texte t={v} />
             </strong>
-            <span className="text-[15px] text-gris">
+            <span className="text-[14px] text-doux">
               <Texte t={l} />
             </span>
           </div>
@@ -150,63 +101,102 @@ export function Chiffres() {
   );
 }
 
-export function Formules() {
-  const carte = "flex flex-col gap-5 rounded-2xl p-6 md:p-8";
-  const Liste = ({ items }: { items: string[] }) => (
-    <ul className="flex flex-col gap-2.5 text-[16px]">
-      {items.filter(montrer).map((x) => (
-        <li key={x} className="flex items-start gap-2.5">
-          <Ico nom="coche" taille={20} className="mt-0.5 shrink-0 text-ambre" />
-          <Texte t={x} />
-        </li>
-      ))}
-    </ul>
-  );
+const PHOTO_PRESTATION: Record<string, NomPhoto> = {
+  parebrise: "remplacement",
+  impact: "impact",
+  vitre: "vitre",
+};
+
+export function Prestations() {
   return (
-    <section id="domicile" className="bg-white">
-      <Container className="flex flex-col gap-10 py-16 md:py-24">
-        <TitreSection
-          label="Intervention mobile"
-          titre="Chez vous ou au travail : on vient à vous"
-        />
-        <div className="grid gap-5 md:grid-cols-2">
-          <div className={`${carte} bg-nuit text-white`}>
-            <p className="flex items-center gap-2 text-[14px] font-bold tracking-[0.14em] text-ciel">
-              <Ico nom="maison" taille={20} />À DOMICILE
-            </p>
-            <Liste
-              items={[
-                `${site.offre.titre} sur le remplacement`,
-                "[Déplacement offert dans notre zone]",
-                "0 € d’avance avec la garantie bris de glace",
-                "Démarches avec l’assurance faites pour vous",
-                "Franchise éventuelle selon votre contrat",
-              ]}
-            />
-            <a href="#devis" className={`${btnAmbre} mt-auto self-start`}>
-              Je choisis le domicile
-            </a>
-          </div>
-          <div className={`${carte} border-2 border-ligne bg-fond`}>
-            <p className="flex items-center gap-2 text-[14px] font-bold tracking-[0.14em] text-bleu">
-              <Ico nom="travail" taille={20} />
-              AU TRAVAIL
-            </p>
-            <Liste
-              items={[
-                "Pose sur le parking de votre entreprise",
-                "Vous ne perdez pas une minute de travail",
-                `${site.offre.titre} sur le remplacement`,
-                "0 € d’avance avec la garantie bris de glace",
-              ]}
-            />
-            <a href="#devis" className={`${btnNuit} mt-auto self-start`}>
-              Je choisis le travail
-            </a>
-          </div>
+    <section id="services" className="py-20 md:py-32">
+      <Container>
+        <div className="mb-10 flex flex-wrap items-end justify-between gap-6 md:mb-14">
+          <TitreSection
+            etiquette="Prestations"
+            titre="Tout le vitrage de votre véhicule."
+          />
+          <a href="#devis" className="border-b border-noir pb-1 text-[15px]">
+            Demander un devis
+          </a>
         </div>
-        <p className="text-[14px] text-gris">
-          <Etoile /> {site.offre.titre} {site.offre.texte}
+        <div className="-mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pb-2 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0">
+          {PRESTATIONS.map((p) => (
+            <a
+              key={p.id}
+              href="#devis"
+              className="tuile group w-[78vw] max-w-[360px] shrink-0 snap-start md:w-auto md:max-w-none"
+            >
+              <Photo
+                nom={PHOTO_PRESTATION[p.id]}
+                sizes="(min-width: 768px) 33vw, 80vw"
+                className="aspect-[4/5] rounded-[4px]"
+              />
+              <h3 className="mb-2 mt-5 text-[22px] md:text-[24px]">
+                {p.titre}
+              </h3>
+              <p className="mb-4 text-[16px] font-light leading-relaxed text-doux">
+                <Texte t={p.texte} />
+              </p>
+              <span className="text-[15px] font-medium">
+                Demander un devis <Fleche />
+              </span>
+            </a>
+          ))}
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+/** Photo d'un côté, service à domicile de l'autre, sur fond noir. */
+export function Service() {
+  const choix: [string, string][] = [
+    [
+      "À domicile",
+      `Devant chez vous, au moment qui vous convient. ${site.offre.titre} sur le remplacement*.`,
+    ],
+    [
+      "Au travail",
+      "Sur le parking de votre entreprise, pendant que vous travaillez.",
+    ],
+    [
+      "Assurance",
+      "Déclaration et prise en charge gérées pour vous, sans avance de frais si vous êtes assuré.",
+    ],
+  ];
+  return (
+    <section
+      id="domicile"
+      className="grid bg-noir text-white lg:min-h-[720px] lg:grid-cols-2"
+    >
+      <Photo
+        nom="artisan"
+        sizes="(min-width: 1024px) 50vw, 100vw"
+        className="h-[360px] md:h-[480px] lg:h-auto"
+      />
+      <div className="flex flex-col justify-center px-5 py-16 md:px-16 md:py-20 xl:px-24">
+        <TitreSection
+          clair
+          etiquette="Service à domicile"
+          titre="Nous venons à vous. Votre journée ne change pas."
+        />
+        <dl className="mt-10 border-t border-white/20">
+          {choix.map(([t, d]) => (
+            <div
+              key={t}
+              className="grid gap-1 border-b border-white/20 py-6 md:grid-cols-[140px_1fr] md:gap-6"
+            >
+              <dt className="text-[17px] font-medium">{t}</dt>
+              <dd className="font-light leading-relaxed text-white/70">{d}</dd>
+            </div>
+          ))}
+        </dl>
+        <a href="#devis" className={`${btnBlanc} mt-10 self-start`}>
+          Choisir mon créneau <Fleche />
+        </a>
+        <p className="mt-8 text-[13px] text-white/50">
+          * {site.offre.titre} {site.offre.texte}
           {montrer(site.offre.conditions) && (
             <>
               {" "}
@@ -215,129 +205,7 @@ export function Formules() {
           )}
           .
         </p>
-      </Container>
-    </section>
-  );
-}
-
-export function Prestations() {
-  return (
-    <section id="services" className="bg-fond">
-      <Container className="flex flex-col gap-10 py-16 md:py-24">
-        <TitreSection
-          label="Prestations"
-          titre="Tout le vitrage de votre véhicule"
-        />
-        <div className="grid gap-5 md:grid-cols-3">
-          {PRESTATIONS.map((p) => (
-            <a
-              key={p.id}
-              href="#devis"
-              className="group flex flex-col overflow-hidden rounded-2xl border border-ligne bg-white text-nuit no-underline transition-shadow hover:shadow-[0_12px_30px_rgba(11,31,51,0.12)]"
-            >
-              {DEMO ? (
-                <PhotoAVenir
-                  texte={`[Photo : ${p.titre.toLowerCase()}]`}
-                  className="aspect-[16/9]"
-                />
-              ) : (
-                <div className="flex aspect-[16/9] items-center justify-center bg-glace text-bleu">
-                  <Ico nom={p.id} taille={64} />
-                </div>
-              )}
-              <div className="flex flex-1 flex-col gap-2 p-5">
-                <h3 className="text-[21px] font-extrabold">{p.titre}</h3>
-                <p className="text-[15px] leading-relaxed text-gris">
-                  <Texte t={p.texte} />
-                </p>
-                <span className="mt-auto pt-2 text-[15px] font-bold text-bleu">
-                  Demander un devis{" "}
-                  <Ico
-                    nom="fleche"
-                    taille={18}
-                    className="inline transition-transform group-hover:translate-x-1"
-                  />
-                </span>
-              </div>
-            </a>
-          ))}
-        </div>
-      </Container>
-    </section>
-  );
-}
-
-export function Deroulement() {
-  const etapes = [
-    "Vous envoyez une photo et votre immatriculation",
-    "On commande le bon vitrage et on contacte votre assurance",
-    "Vous choisissez le créneau et le lieu de l’intervention",
-  ];
-  return (
-    <section id="communes" className="bg-white">
-      <Container className="grid gap-12 py-16 md:py-24 lg:grid-cols-2">
-        <div className="flex flex-col gap-6">
-          <TitreSection
-            label="Comment ça se passe"
-            titre="On vient à vous, avec tout le matériel"
-            texte={
-              <>
-                Chez vous, sur votre lieu de travail ou sur un parking : la pose
-                se fait sur place
-                {montrer(site.dureePose) && (
-                  <>
-                    . Comptez <Texte t={site.dureePose} /> de pose, puis{" "}
-                    <Texte t={site.delaiAvantRoute} /> avant de reprendre la
-                    route
-                  </>
-                )}
-                .
-              </>
-            }
-          />
-          <ol className="flex flex-col gap-4">
-            {etapes.map((e, i) => (
-              <li
-                key={e}
-                className="flex items-center gap-4 text-[17px] font-semibold"
-              >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ambre font-titre text-[18px] font-extrabold text-nuit">
-                  {i + 1}
-                </span>
-                {e}
-              </li>
-            ))}
-          </ol>
-        </div>
-        <div className="flex flex-col gap-4 rounded-2xl bg-fond p-6 md:p-8">
-          <p className="flex items-center gap-2 font-titre text-[22px] font-extrabold">
-            <Ico nom="lieu" className="text-bleu" />
-            Zone d’intervention
-          </p>
-          <p className="text-[16px] text-gris">
-            {site.zone.texte}
-            {montrer(site.zone.rayon) && (
-              <>
-                {" "}
-                · <Texte t={site.zone.rayon} />
-              </>
-            )}
-            . Votre commune n’est pas dans la liste ? Demandez-nous.
-          </p>
-          <ul className="flex flex-wrap gap-2">
-            {COMMUNES.map((c) => (
-              <li key={c.slug}>
-                <a
-                  href={vers(cheminCommune(c))}
-                  className="inline-flex min-h-11 items-center rounded-full border border-ligne bg-white px-4 text-[15px] font-semibold text-nuit no-underline hover:border-bleu"
-                >
-                  {c.nom}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Container>
+      </div>
     </section>
   );
 }
@@ -345,12 +213,12 @@ export function Deroulement() {
 export function Assurance() {
   const points: [string, string][] = [
     [
-      "0 € d’avance",
-      "Assuré bris de glace ? Nous nous faisons régler directement par votre assureur.",
+      "Déclaration faite pour vous",
+      "Nous déclarons le sinistre auprès de votre assureur.",
     ],
     [
-      "Franchise selon votre contrat",
-      "Seule la franchise éventuelle prévue par votre contrat reste à votre charge.",
+      "Règlement en direct",
+      "Votre assureur nous règle directement. Seule la franchise éventuelle prévue par votre contrat reste à votre charge.",
     ],
     [
       "Libre choix du réparateur",
@@ -358,38 +226,144 @@ export function Assurance() {
     ],
   ];
   return (
-    <section id="assurance" className="bg-bleu text-white">
-      <Container className="flex flex-col gap-10 py-16 md:py-20">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+    <section id="assurance" className="py-20 md:py-32">
+      <Container className="grid gap-12 lg:grid-cols-[5fr_7fr] lg:gap-24">
+        <div>
+          <p className="text-[120px] font-light leading-[0.85] tracking-[-0.05em] md:text-[200px]">
+            0 €
+          </p>
+          <p className="mt-5 text-[13px] font-medium uppercase tracking-[0.22em] text-cassis">
+            d’avance avec votre assurance
+          </p>
+        </div>
+        <div>
           <TitreSection
-            clair
-            label="Assurance bris de glace"
-            titre={
-              <>
-                Assuré bris de glace&nbsp;?{" "}
-                <span className="text-ambre">Vous n’avancez rien</span>
-              </>
-            }
-            texte="Nous déclarons le sinistre et nous nous faisons régler directement par votre assureur. Il vous suffit de votre carte verte."
+            etiquette="Bris de glace"
+            titre="Assuré ? Nous nous occupons de tout avec votre assureur."
           />
-          <a
-            href="#devis"
-            className={`${btnAmbre} shrink-0 self-start lg:self-auto`}
-          >
-            Vérifier ma prise en charge
+          <ol className="mt-10 border-t border-trait">
+            {points.map(([t, d], i) => (
+              <li
+                key={t}
+                className="grid grid-cols-[44px_1fr] border-b border-trait py-6"
+              >
+                <span className="pt-0.5 text-[14px] text-doux">0{i + 1}</span>
+                <span>
+                  <strong className="mb-1 block text-[18px] font-medium">
+                    {t}
+                  </strong>
+                  <span className="font-light text-doux">{d}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
+          <a href="#devis" className={`${btnLigne} mt-10`}>
+            Vérifier ma prise en charge <Fleche />
           </a>
         </div>
-        <div className="grid gap-4 md:grid-cols-3">
-          {points.map(([t, d]) => (
-            <div key={t} className="rounded-2xl bg-white/10 p-5">
-              <strong className="mb-1 flex items-center gap-2 text-[18px]">
-                <Ico nom="bouclier" taille={22} className="text-ambre" />
-                {t}
-              </strong>
-              <span className="text-[15px] text-white/80">{d}</span>
-            </div>
-          ))}
+      </Container>
+    </section>
+  );
+}
+
+/** Comment ça se passe + communes desservies. */
+export function Deroulement() {
+  const etapes: [string, string][] = [
+    ["Une photo", "Vous envoyez le dégât et votre immatriculation."],
+    [
+      "Votre assurance",
+      "Nous commandons le bon vitrage et contactons votre assureur.",
+    ],
+    [
+      "Votre créneau",
+      "Nous intervenons là où vous êtes, avec tout le matériel.",
+    ],
+  ];
+  return (
+    <section id="communes" className="border-t border-trait py-20 md:py-32">
+      <Container className="grid gap-14 lg:grid-cols-2 lg:gap-24">
+        <div>
+          <TitreSection
+            etiquette="Comment ça se passe"
+            titre="Trois étapes, aucune démarche."
+          />
+          <ol className="mt-10 border-t border-trait">
+            {etapes.map(([t, d], i) => (
+              <li
+                key={t}
+                className="grid grid-cols-[44px_1fr] border-b border-trait py-6"
+              >
+                <span className="pt-0.5 text-[14px] text-doux">0{i + 1}</span>
+                <span>
+                  <strong className="mb-1 block text-[18px] font-medium">
+                    {t}
+                  </strong>
+                  <span className="font-light text-doux">{d}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
+          {montrer(site.dureePose) && (
+            <p className="mt-6 font-light text-doux">
+              Comptez <Texte t={site.dureePose} /> de pose, puis{" "}
+              <Texte t={site.delaiAvantRoute} /> avant de reprendre la route.
+            </p>
+          )}
         </div>
+        <div>
+          <Etiquette>Zone d’intervention</Etiquette>
+          <p className="mt-4 text-[22px] font-light md:text-[28px]">
+            {site.zone.texte}
+            {montrer(site.zone.rayon) && (
+              <>
+                {" "}
+                · <Texte t={site.zone.rayon} />
+              </>
+            )}
+          </p>
+          <ul className="mt-8 grid border-t border-trait sm:grid-cols-2 sm:gap-x-8">
+            {COMMUNES.map((c) => (
+              <li key={c.slug} className="border-b border-trait">
+                <a
+                  href={vers(cheminCommune(c))}
+                  className="flex min-h-14 items-center justify-between text-[17px] hover:text-cassis"
+                >
+                  {c.nom}
+                  <span aria-hidden="true" className="text-doux">
+                    →
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-6 font-light text-doux">
+            Votre commune n’est pas dans la liste ? Demandez-nous.
+          </p>
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+export function BlocDevis() {
+  return (
+    <section id="devis" className="bg-gris py-20 md:py-32">
+      <Container className="grid gap-10 lg:grid-cols-[5fr_7fr] lg:gap-24">
+        <div>
+          <TitreSection etiquette="Devis express" titre="Une photo suffit." />
+          <p className="mt-6 max-w-[40ch] text-[18px] font-light leading-relaxed text-doux">
+            Trois questions, une photo du pare-brise, et nous revenons vers vous
+            avec un devis gratuit et sans engagement
+            {montrer(site.delaiReponse) && (
+              <>
+                {" "}
+                sous <Texte t={site.delaiReponse} />
+              </>
+            )}
+            .
+          </p>
+        </div>
+        <Devis />
       </Container>
     </section>
   );
@@ -398,24 +372,25 @@ export function Assurance() {
 export function Questions() {
   const faq = FAQ.filter(([, , incomplete]) => DEMO || !incomplete);
   return (
-    <section id="questions" className="bg-fond">
-      <Container className="flex max-w-[880px] flex-col gap-8 py-16 md:py-24">
+    <section id="questions" className="py-20 md:py-32">
+      <Container className="grid gap-10 lg:grid-cols-[5fr_7fr] lg:gap-24">
         <TitreSection
-          label="Questions fréquentes"
-          titre="Vos questions, nos réponses"
+          etiquette="Questions fréquentes"
+          titre="Vos questions, nos réponses."
         />
-        <div className="flex flex-col gap-3">
-          {faq.map(([q, r], i) => (
-            <details
-              key={q}
-              open={i === 0}
-              className="rounded-2xl border border-ligne bg-white"
-            >
-              <summary className="flex min-h-14 cursor-pointer items-center justify-between gap-4 px-5 py-4 text-[17px] font-bold">
+        <div className="border-t border-trait">
+          {faq.map(([q, r]) => (
+            <details key={q} className="border-b border-trait">
+              <summary className="flex min-h-16 cursor-pointer items-center justify-between gap-6 py-5 text-[18px]">
                 {q}
-                <Ico nom="chevron" className="shrink-0 text-bleu" />
+                <span
+                  aria-hidden="true"
+                  className="plus text-[24px] font-light leading-none transition-transform"
+                >
+                  +
+                </span>
               </summary>
-              <p className="px-5 pb-5 text-[16px] leading-relaxed text-gris">
+              <p className="pb-6 pr-10 font-light leading-relaxed text-doux">
                 <Texte t={r} />
               </p>
             </details>
@@ -428,45 +403,68 @@ export function Questions() {
 
 export function BlocRappel() {
   return (
-    <section id="rappel" className="bg-white">
-      <Container className="grid gap-8 py-16 md:py-24 lg:grid-cols-12 lg:items-center">
-        <div className="lg:col-span-5">
+    <section id="rappel" className="border-t border-trait py-20 md:py-32">
+      <Container className="grid gap-10 lg:grid-cols-[5fr_7fr] lg:gap-24">
+        <div>
           <TitreSection
-            label="Être rappelé"
-            titre="Une question ? On vous rappelle"
-            texte={
-              montrer(site.telephone) ? (
-                <>
-                  Laissez votre numéro, ou appelez directement le{" "}
-                  <Texte t={site.telephone} />.
-                </>
-              ) : (
-                "Laissez votre numéro : nous vous rappelons au moment qui vous arrange."
-              )
-            }
+            etiquette="Être rappelé"
+            titre="Une question ? Nous vous rappelons."
           />
+          {montrer(site.telephone) && (
+            <p className="mt-6 text-[18px] font-light text-doux">
+              Ou appelez directement le{" "}
+              <a
+                href={site.telephoneLien ? lienAppel() : "#rappel"}
+                className="text-noir"
+              >
+                <Texte t={site.telephone} />
+              </a>
+              .
+            </p>
+          )}
         </div>
-        <div className="lg:col-span-7">
-          <Rappel />
-        </div>
+        <Rappel />
       </Container>
     </section>
   );
 }
 
-/** Bloc commun aux pages : tout ce qui suit l'accroche. */
-export function SuiteDePage({ avant }: { avant?: ReactNode }) {
+/** Grande photo de fin avec un dernier appel à l'action. */
+export function Fin() {
+  return (
+    <section className="relative flex min-h-[520px] items-center overflow-hidden bg-noir text-white md:min-h-[640px]">
+      <Photo nom="nuit" assombrir className="absolute inset-0" />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.75),rgba(0,0,0,0.2))]"
+      />
+      <Container className="relative z-10 py-20">
+        <Etiquette clair>{site.zone.texte}</Etiquette>
+        <h2 className="mb-10 mt-5 max-w-[14ch] text-[40px] font-light leading-[1.03] md:text-[68px]">
+          Reprenez la route, l’esprit tranquille.
+        </h2>
+        <a href="#devis" className={btnBlanc}>
+          Demander un devis <Fleche />
+        </a>
+      </Container>
+    </section>
+  );
+}
+
+/** Tout ce qui suit l'ouverture, commun à l'accueil et aux pages par commune. */
+export function SuiteDePage({ apres }: { apres?: ReactNode }) {
   return (
     <>
-      <Engagements />
       <Chiffres />
-      {avant}
-      <Formules />
       <Prestations />
-      <Deroulement />
+      <Service />
       <Assurance />
+      <BlocDevis />
+      <Deroulement />
       <Questions />
       <BlocRappel />
+      {apres}
+      <Fin />
     </>
   );
 }

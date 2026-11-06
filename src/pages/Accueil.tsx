@@ -1,6 +1,6 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { Accroche, SuiteDePage } from "../components/Sections";
+import { Ouverture, SuiteDePage } from "../components/Sections";
 import { site } from "../config";
 import { COMMUNES } from "../contenu";
 import { aCompleter } from "../aCompleter";
@@ -30,13 +30,15 @@ export default function Accueil() {
     <>
       <Header />
       <main>
-        <Accroche
+        <Ouverture
+          etiquette="Artisan pare-brise · Dijon"
           titre={
             <>
-              Votre pare-brise remplacé{" "}
-              <span className="text-ambre">chez vous</span> ou au travail
+              Votre <span className="whitespace-nowrap">pare-brise</span>,
+              remplacé là où vous êtes.
             </>
           }
+          texte="À domicile ou sur le parking de votre travail. Un artisan dijonnais se déplace avec tout le matériel et s’occupe de votre assurance."
         />
         <SuiteDePage />
       </main>

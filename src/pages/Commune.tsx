@@ -1,7 +1,7 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { Accroche, SuiteDePage } from "../components/Sections";
-import { Container } from "../components/ui";
+import { Ouverture, SuiteDePage } from "../components/Sections";
+import { Container, Etiquette } from "../components/ui";
 import { vers } from "../vers";
 import { COMMUNES, cheminCommune, type Commune } from "../contenu";
 
@@ -12,46 +12,40 @@ export default function PageCommune({ commune }: { commune: Commune }) {
     <>
       <Header />
       <main>
-        <nav
-          aria-label="Fil d’Ariane"
-          className="border-b border-ligne bg-fond"
-        >
-          <Container className="py-2.5 text-[14px] text-gris">
-            <a href={vers("/")}>Accueil</a> › Pare-brise {commune.nom}
-          </Container>
-        </nav>
-        <Accroche
+        <Ouverture
+          etiquette={`Pare-brise · ${commune.nom} (${commune.codePostal})`}
           titre={
             <>
-              Pare-brise à <span className="text-ambre">{commune.nom}</span> :
-              remplacé chez vous ou au travail
+              Votre <span className="whitespace-nowrap">pare-brise</span>{" "}
+              remplacé à {commune.nom}.
             </>
           }
-          sousTitre={commune.texte}
+          texte={commune.texte}
         />
-        <SuiteDePage />
-        <section
-          aria-label="Autres communes"
-          className="border-t border-ligne bg-white"
-        >
-          <Container className="flex flex-col gap-3 py-10">
-            <h2 className="text-[22px] font-extrabold">
-              Nous intervenons aussi à
-            </h2>
-            <ul className="flex flex-wrap gap-x-5 gap-y-2 text-[15px]">
-              {autres.map((c) => (
-                <li key={c.slug}>
-                  <a
-                    href={vers(cheminCommune(c))}
-                    className="inline-flex min-h-11 items-center font-semibold"
-                  >
-                    Pare-brise {c.nom} ({c.codePostal})
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </Container>
-        </section>
+        <SuiteDePage
+          apres={
+            <section
+              aria-label="Autres communes"
+              className="border-t border-trait py-14"
+            >
+              <Container>
+                <Etiquette>Nous intervenons aussi à</Etiquette>
+                <ul className="mt-5 flex flex-wrap gap-x-8 gap-y-1">
+                  {autres.map((c) => (
+                    <li key={c.slug}>
+                      <a
+                        href={vers(cheminCommune(c))}
+                        className="inline-flex min-h-11 items-center text-[16px] text-doux hover:text-noir"
+                      >
+                        Pare-brise {c.nom}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </Container>
+            </section>
+          }
+        />
       </main>
       <Footer />
     </>
