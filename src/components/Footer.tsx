@@ -2,7 +2,7 @@ import { vers } from "../vers";
 import { Logo } from "./Logo";
 import { Container, Ico } from "./ui";
 import { lienAppel, site } from "../config";
-import { COMMUNES, cheminCommune } from "../contenu";
+import { LISTE_COMMUNES } from "../contenu";
 import { montrer, Texte } from "../aCompleter";
 import { useAncre } from "../ancre";
 
@@ -50,19 +50,17 @@ export default function Footer() {
         </div>
         <div>
           <p className={titre}>Zone d’intervention</p>
-          <ul className="grid grid-cols-2 gap-x-4 lg:grid-cols-1 xl:grid-cols-2">
-            {COMMUNES.map((c) => (
-              <li key={c.slug}>
-                <a href={vers(cheminCommune(c))} className={lien}>
-                  {c.nom}
-                </a>
-              </li>
-            ))}
-          </ul>
+          <p className="text-[15px] font-light leading-relaxed text-white/60">
+            {LISTE_COMMUNES} et alentours.
+          </p>
         </div>
         <div className="flex flex-col">
           <p className={titre}>Contact</p>
-          <span className="py-2 text-[15px] leading-relaxed text-white/60">{site.adresse.rue}<br />{site.adresse.codePostal} {site.adresse.ville}</span>
+          <span className="py-2 text-[15px] leading-relaxed text-white/60">
+            {site.adresse.rue}
+            <br />
+            {site.adresse.codePostal} {site.adresse.ville}
+          </span>
           {montrer(site.telephone) && (
             <a
               href={site.telephoneLien ? lienAppel() : vers("/#rappel")}

@@ -13,7 +13,7 @@ import {
 } from "./ui";
 import { Devis, Rappel } from "./Formulaires";
 import { adresseComplete, lienAppel, site } from "../config";
-import { COMMUNES, FAQ, PRESTATIONS, cheminCommune } from "../contenu";
+import { FAQ, LISTE_COMMUNES, PRESTATIONS } from "../contenu";
 import { Texte, montrer } from "../aCompleter";
 
 /** Grande photo d'ouverture plein écran, titre en bas à gauche, offre « 200 € offerts » à droite. */
@@ -321,23 +321,12 @@ export function Deroulement() {
               </>
             )}
           </p>
-          <ul className="mt-8 grid border-t border-trait sm:grid-cols-2 sm:gap-x-8">
-            {COMMUNES.map((c) => (
-              <li key={c.slug} className="border-b border-trait">
-                <a
-                  href={vers(cheminCommune(c))}
-                  className="flex min-h-14 items-center justify-between text-[17px] hover:text-cassis"
-                >
-                  {c.nom}
-                  <span aria-hidden="true" className="text-doux">
-                    →
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-6 font-light text-doux">
-            Basés au {adresseComplete}, nous nous déplaçons chez vous ou au travail. Votre commune n’est pas dans la liste ? Demandez-nous.
+          <p className="mt-8 border-t border-trait pt-8 text-[18px] font-light leading-relaxed">
+            Nous intervenons à {LISTE_COMMUNES} et alentours.
+          </p>
+          <p className="mt-4 font-light text-doux">
+            Basés au {adresseComplete}, nous nous déplaçons chez vous ou au
+            travail. Votre commune n’est pas citée ? Demandez-nous.
           </p>
         </div>
       </Container>

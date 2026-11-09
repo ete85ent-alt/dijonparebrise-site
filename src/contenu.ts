@@ -37,26 +37,17 @@ export const FAQ: [string, string, boolean?][] = [
     'Votre carte verte (ou le nom de votre assureur), l’immatriculation du véhicule et, si possible, une photo du dégât. Prévoyez un endroit où garer la voiture pendant la pose.'],
 ]
 
-export type Commune = { nom: string; slug: string; codePostal: string; texte: string }
-
-/** Communes avec leur page (référencement local). */
-export const COMMUNES: Commune[] = [
-  { nom: 'Dijon', slug: 'dijon', codePostal: '21000',
-    texte: 'Centre-ville, quartiers résidentiels ou zones d’activités : nous intervenons dans tout Dijon, devant chez vous ou sur le parking de votre travail.' },
-  { nom: 'Chenôve', slug: 'chenove', codePostal: '21300',
-    texte: 'À Chenôve, nous remplaçons ou réparons votre pare-brise à votre domicile ou sur votre lieu de travail, sans que vous ayez à vous déplacer.' },
-  { nom: 'Talant', slug: 'talant', codePostal: '21240',
-    texte: 'À Talant, l’intervention se fait chez vous : un impact réparé ou un pare-brise remplacé sans reprendre la route avec un vitrage abîmé.' },
-  { nom: 'Quetigny', slug: 'quetigny', codePostal: '21800',
-    texte: 'À Quetigny, nous venons chez vous ou sur le parking de votre entreprise : vous continuez votre journée pendant la pose.' },
-  { nom: 'Longvic', slug: 'longvic', codePostal: '21600',
-    texte: 'À Longvic, à domicile ou au travail, nous prenons en charge votre pare-brise et les démarches avec votre assurance.' },
-  { nom: 'Fontaine-lès-Dijon', slug: 'fontaine-les-dijon', codePostal: '21121',
-    texte: 'À Fontaine-lès-Dijon, nous intervenons devant chez vous : remplacement de pare-brise, réparation d’impact et vitres latérales.' },
-  { nom: 'Saint-Apollinaire', slug: 'saint-apollinaire', codePostal: '21850',
-    texte: 'À Saint-Apollinaire, nous remplaçons votre pare-brise à domicile ou sur votre lieu de travail, avec les démarches assurance gérées pour vous.' },
-  { nom: 'Chevigny-Saint-Sauveur', slug: 'chevigny-saint-sauveur', codePostal: '21800',
-    texte: 'À Chevigny-Saint-Sauveur, nous venons chez vous ou au travail, avec tout le matériel, pour réparer ou remplacer votre vitrage.' },
+/** Communes desservies (citées dans le texte du site, et codes postaux reconnus par le devis). */
+export const COMMUNES: { nom: string; codePostal: string }[] = [
+  { nom: 'Dijon', codePostal: '21000' },
+  { nom: 'Chenôve', codePostal: '21300' },
+  { nom: 'Talant', codePostal: '21240' },
+  { nom: 'Quetigny', codePostal: '21800' },
+  { nom: 'Longvic', codePostal: '21600' },
+  { nom: 'Fontaine-lès-Dijon', codePostal: '21121' },
+  { nom: 'Saint-Apollinaire', codePostal: '21850' },
+  { nom: 'Chevigny-Saint-Sauveur', codePostal: '21800' },
 ]
 
-export const cheminCommune = (c: Commune) => `/pare-brise-${c.slug}`
+/** « Dijon, Chenôve, … , Saint-Apollinaire, Chevigny-Saint-Sauveur » */
+export const LISTE_COMMUNES = COMMUNES.map((x) => x.nom).join(', ')

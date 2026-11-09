@@ -1,20 +1,11 @@
 import { Route, Routes } from "react-router-dom";
 import Accueil from "./pages/Accueil";
-import PageCommune from "./pages/Commune";
 import { MentionsLegales, Confidentialite, Introuvable } from "./pages/Legal";
-import { COMMUNES, cheminCommune } from "./contenu";
 
 export function Pages() {
   return (
     <Routes>
       <Route path="/" element={<Accueil />} />
-      {COMMUNES.map((c) => (
-        <Route
-          key={c.slug}
-          path={cheminCommune(c)}
-          element={<PageCommune commune={c} />}
-        />
-      ))}
       <Route path="/mentions-legales" element={<MentionsLegales />} />
       <Route path="/confidentialite" element={<Confidentialite />} />
       <Route path="*" element={<Introuvable />} />
@@ -23,11 +14,6 @@ export function Pages() {
 }
 
 const MARQUE = " | Dijon Pare-Brise";
-/** Titre Google d'une commune : la version longue si elle tient en 60 caractères. */
-const titreCommune = (nom: string) =>
-  [`Pare-brise ${nom} à domicile${MARQUE}`, `Pare-brise ${nom}${MARQUE}`].find(
-    (t) => t.length <= 60,
-  )!;
 
 /** Pages écrites en HTML complet à la construction (référencement), avec leur titre et leur description Google. */
 export const PAGES_PRERENDUES: {
@@ -46,13 +32,6 @@ export const PAGES_PRERENDUES: {
     description:
       "Remplacement et réparation de pare-brise chez vous ou au travail, à Dijon et dans sa métropole. 200 € offerts, 0 € d’avance avec l’assurance. Devis gratuit.",
   },
-  ...COMMUNES.map((c) => ({
-    chemin: cheminCommune(c),
-    fichier: `${cheminCommune(c).slice(1)}.html`,
-    priorite: "0.8",
-    titre: titreCommune(c.nom),
-    description: `Pare-brise à ${c.nom} (${c.codePostal}) : remplacement et réparation chez vous ou au travail. 200 € offerts, démarches assurance gérées.`,
-  })),
   {
     chemin: "/mentions-legales",
     fichier: "mentions-legales.html",

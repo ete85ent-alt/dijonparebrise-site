@@ -39,7 +39,7 @@ export default function Accueil() {
               remplacé là où vous êtes.
             </>
           }
-          texte="À domicile ou sur le parking de votre travail. DIJON PARE-BRISE se déplace avec tout le matériel et s’occupe de votre assurance."
+          texte="À domicile ou sur le parking de votre travail. DIJON PARE‑BRISE se déplace avec tout le matériel et s’occupe de votre assurance."
         />
         <SuiteDePage />
       </main>

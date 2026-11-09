@@ -1,18 +1,7 @@
 import { test, expect } from "@playwright/test";
 
-const COMMUNES = [
-  "dijon",
-  "chenove",
-  "talant",
-  "quetigny",
-  "longvic",
-  "fontaine-les-dijon",
-  "saint-apollinaire",
-  "chevigny-saint-sauveur",
-];
 const PAGES = [
   "/",
-  ...COMMUNES.map((c) => `/pare-brise-${c}`),
   "/mentions-legales",
   "/confidentialite",
 ];
@@ -71,7 +60,7 @@ test("adresse affichée, et le déplacement chez le client toujours mis en avant
     ),
   ).toBeVisible();
   await expect(
-    page.getByText(/DIJON PARE-BRISE se déplace avec tout le matériel/),
+    page.getByText(/DIJON PARE.BRISE se déplace avec tout le matériel/),
   ).toBeVisible();
   expect(await page.locator("body").innerText()).not.toMatch(
     /artisan dijonnais/,
@@ -164,7 +153,7 @@ test("être rappelé : formulaire envoyé", async ({ page }) => {
 });
 
 test("menu plein écran : s’ouvre, se ferme avec Échap", async ({ page }) => {
-  await page.goto("/pare-brise-chenove");
+  await page.goto("/");
   await page.getByRole("button", { name: "Ouvrir le menu" }).click();
   const menu = page.getByRole("dialog", { name: "Menu" });
   await expect(
@@ -176,7 +165,7 @@ test("menu plein écran : s’ouvre, se ferme avec Échap", async ({ page }) => 
 
 test("téléphone : barre d’actions en bas", async ({ page, isMobile }) => {
   test.skip(!isMobile, "téléphone seulement");
-  await page.goto("/pare-brise-chenove");
+  await page.goto("/");
   const barre = page.getByRole("navigation", { name: "Actions rapides" });
   await expect(barre).toBeVisible();
   await expect(barre.getByRole("link", { name: "Devis" })).toHaveAttribute(
@@ -193,7 +182,10 @@ test("adresse inconnue : vraie page 404", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("plan du site : toutes les communes", async ({ request }) => {
+test("plan du site : plus de pages par commune, communes citées sur l’accueil", async ({ page, request }) => {
   const plan = await (await request.get("/sitemap.xml")).text();
-  for (const c of COMMUNES) expect(plan).toContain(`/pare-brise-${c}<`);
+  expect(plan).not.toContain("/pare-brise-");
+  expect((await request.get("/pare-brise-chenove")).status()).toBe(404);
+  await page.goto("/");
+  await expect(page.locator("#communes").getByText(/Nous intervenons à Dijon, Chenôve, .*Chevigny-Saint-Sauveur et alentours/)).toBeVisible();
 });

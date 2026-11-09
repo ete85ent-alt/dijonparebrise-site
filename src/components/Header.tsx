@@ -4,7 +4,7 @@ import { Logo } from "./Logo";
 import StatutOuverture from "./Statut";
 import { Container, Etiquette, Ico } from "./ui";
 import { adresseComplete, lienAppel, site } from "../config";
-import { COMMUNES, cheminCommune } from "../contenu";
+import { LISTE_COMMUNES } from "../contenu";
 import { montrer } from "../aCompleter";
 import { useAncre } from "../ancre";
 
@@ -121,19 +121,9 @@ export default function Header({ surPhoto = true }: { surPhoto?: boolean }) {
             <div className="flex flex-col gap-8">
               <div className="flex flex-col gap-3">
                 <Etiquette>Zone d’intervention</Etiquette>
-                <ul className="flex flex-col">
-                  {COMMUNES.map((c) => (
-                    <li key={c.slug}>
-                      <a
-                        href={vers(cheminCommune(c))}
-                        onClick={() => setMenu(false)}
-                        className="inline-flex min-h-10 items-center text-[17px] text-doux hover:text-noir"
-                      >
-                        Pare-brise {c.nom}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+                <p className="text-[17px] font-light leading-relaxed text-doux">
+                  {LISTE_COMMUNES} et alentours.
+                </p>
               </div>
               <div className="flex flex-col gap-3">
                 <Etiquette>Contact</Etiquette>
