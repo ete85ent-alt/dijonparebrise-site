@@ -40,11 +40,14 @@ export function Ouverture({
       />
       <Container className="relative z-10 grid gap-10 pb-12 pt-[120px] md:pb-20 lg:grid-cols-[1fr_auto] lg:items-end">
         <div className="apparition flex flex-col">
-          <Etiquette clair className="mb-5">
-            {etiquette}
-          </Etiquette>
-          <h1 className="max-w-[13ch] text-[42px] font-light leading-[1.02] md:text-[72px] xl:text-[92px]">
-            {titre}
+          {/* Référencement : le titre principal contient le métier et la ville (« Artisan pare-brise · Dijon »). */}
+          <h1>
+            <span className="mb-5 block text-[12px] font-medium uppercase tracking-[0.22em] text-cassis-clair">
+              {etiquette}
+            </span>
+            <span className="block max-w-[13ch] text-[42px] font-light leading-[1.02] md:text-[72px] xl:text-[92px]">
+              {titre}
+            </span>
           </h1>
           <p className="mb-9 mt-6 max-w-[46ch] text-[17px] font-light leading-relaxed text-white/80 md:text-[19px]">
             {texte}

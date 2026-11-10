@@ -41,7 +41,9 @@ export const site = {
     ["[12] mois", "de garantie sur la pose"],
   ] as [string, string][],
   // Adresse affichée sur le site (décision du 06/11/2026) ; l'artisan se déplace toujours chez le client ou au travail
-  adresse: { rue: "6-8 rue de Bastogne", codePostal: "21850", ville: "Saint-Apollinaire" },
+  adresse: { rue: "6-8 rue de Bastogne", codePostal: "21850", ville: "Saint-Apollinaire",
+    // Coordonnées GPS (OpenStreetMap, rue de Bastogne) : pour Google
+    lat: 47.3391354, lon: 5.0720674 },
   mentions: {
     raisonSociale: "DIJON PARE-BRISE, SASU",
     capital: "1 000 €",

@@ -9,6 +9,8 @@ const racine = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const dist = path.join(racine, 'dist')
 const serveur = path.join(racine, 'dist-serveur', 'entree-serveur.js')
 const SITE = 'https://www.dijon-pare-brise.fr'   // même valeur que siteUrl dans src/config.ts
+// Adresse où le site est réellement en ligne (démonstration GitHub Pages ou vrai domaine) : pour l’image de partage
+const PUBLIQUE = process.env.URL_PUBLIQUE || `${SITE}/`
 
 const echapper = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
@@ -24,6 +26,7 @@ for (const page of PAGES_PRERENDUES) {
     .replace(/(<meta name="description" content=")[^"]*(")/, `$1${description}$2`)
     .replace(/(<meta property="og:title" content=")[^"]*(")/, `$1${titre}$2`)
     .replace(/(<meta property="og:description" content=")[^"]*(")/, `$1${description}$2`)
+    .replace(/(<meta property="og:image" content=")[^"]*(")/, `$1${PUBLIQUE}partage.jpg$2`)
     .replace('<div id="root"></div>', `<div id="root">${rendre(page.chemin)}</div>`)
   // Démonstration : jamais indexée par Google
   if (process.env.VITE_DEMO === '1') html = html.replace('<meta charset="UTF-8" />', '<meta charset="UTF-8" />\n    <meta name="robots" content="noindex, nofollow" />')

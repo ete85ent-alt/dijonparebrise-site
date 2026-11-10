@@ -189,3 +189,17 @@ test("plan du site : plus de pages par commune, communes citées sur l’accueil
   await page.goto("/");
   await expect(page.locator("#communes").getByText(/Nous intervenons à Dijon, Chenôve, .*Chevigny-Saint-Sauveur et alentours/)).toBeVisible();
 });
+
+test("référencement : titre principal, données Google et image de partage", async ({ page, request }) => {
+  await page.goto("/");
+  await expect(page.locator("h1")).toHaveCount(1);
+  await expect(page.locator("h1")).toContainText(/pare-brise.*Dijon/i);
+  const donnees = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent()) ?? "{}");
+  const types = donnees["@graph"].map((x: { "@type": string }) => x["@type"]);
+  expect(types).toEqual(["AutoRepair", "FAQPage"]);
+  const image = await page.locator('meta[property="og:image"]').getAttribute("content");
+  expect(image).toMatch(/\/partage\.jpg$/);
+  const fichier = await request.get("/partage.jpg");
+  expect(fichier.status()).toBe(200);
+  expect(fichier.headers()["content-type"]).toContain("image/jpeg");
+});
